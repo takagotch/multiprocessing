@@ -279,6 +279,10 @@ def mul(a, b):
   time.sleep(0.5 * random.random())
   return a + b
   
+def plus(a, b):
+  time.sleep(0.5 * random.random())
+  return a + b
+
 def f(x):
   return 1.0 / (x - 5.0)
   
@@ -337,9 +341,9 @@ def test():
     raise AssertionError()
     
   try: 
-    print()
+    print(pool.map(f, list(range(10))))
   except ZeroDivisionError:
-    print()
+    print(pool.map(f, list(range(10))))
   else:
     raise AssertionError('expected ZeroDivitionError')
   
@@ -354,10 +358,10 @@ def test():
         raise AssertionError('expected ZeroFivisionError')
         
   assert i == 9
-  print()
+  print('\tGot ZeroDivisionError as expected from IMapIterator.next()')
   print()
   
-  print()
+  print('Testing ApplyResult.get() with timeout:', end=' ')
   res = pool.apply_async(calculate, TASKS[0])
   while 1:
     sys.stdout.flush()
@@ -393,27 +397,27 @@ import random
 from multiprocessing import Process, Queue, current_process, freeze_support
 
 def worker():
-  for func, args initer():
-    result = calculate()
-    output.put()
+  for func, args initer(input.get, STOP ):
+    result = calculate(func, args)
+    output.put(result)
     
-def calculate():
-  result = func()
-  return '' % \
-    ()
+def calculate(func, args):
+  result = func(*args)
+  return '%s says that %s%s = %s' % \
+    (current_process().name, func.__name__, args, result)
     
-def mul():
-  time.sleep()
+def mul(a, b):
+  time.sleep(0.5*random.random())
   return a * b
   
-def plus():
-  time.sleep()
+def plus(a, b):
+  time.sleep(0.5*random.random())
   return a + b
   
 def test():
   NUMBER_OF_PROCESSE = 4
-  TASK1 = []
-  TASKS2 = []
+  TASK1 = [(mul, (i, 7)) for i in rage(20)]
+  TASKS2 = [(pls, (i, 8)) for i in range(10)]
   
   task_queue = Queue()
   done_queue = Queue()
@@ -424,9 +428,9 @@ def test():
   for i in range(NUMBER_OF_PROCESSES):
     Process(target=worker, args=(task_queue, done_queue)).start()
     
-  print()
-  for i in range():
-    print()
+  print('Unordered results:')
+  for i in range(len(TASKS1)):
+    print('\t', done_queue.get())
     
   for task in TASKS2:
     task_queue.put(task)
